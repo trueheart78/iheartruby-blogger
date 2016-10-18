@@ -4,6 +4,11 @@ ruby '2.3.1' # keep .ruby-version in sync with this
 
 gem 'rake'
 
+group :development do
+  gem 'guard'
+  gem 'guard-minitest'
+end
+
 group :test, :development do
   gem 'minitest'
   gem 'byebug'
