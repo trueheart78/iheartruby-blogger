@@ -1,4 +1,6 @@
 # frozen_string_literal: true
+require 'yaml'
+
 class Reason
   class MissingYamlPathConfigError < StandardError
   end

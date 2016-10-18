@@ -1,4 +1,4 @@
-# I :heart: Ruby [![CircleCI](https://circleci.com/gh/trueheart78/simple-cli-tools.svg?style=shield)](https://circleci.com/gh/trueheart78/simple-cli-tools)
+# I :heart: Ruby [![CircleCI](https://circleci.com/gh/trueheart78/iheartruby-blogger.svg?style=shield)](https://circleci.com/gh/trueheart78/iheartruby-blogger)
 
 Because I am lazy, but mostly, because I love Ruby.
 
