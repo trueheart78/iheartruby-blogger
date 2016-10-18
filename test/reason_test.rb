@@ -25,7 +25,31 @@ class ReasonTest < Minitest::Test
 
   def test_find
     assert(Reason.find('something else'))
+    assert_equal([1, 'something'], Reason.find('Something'))
+    assert_equal([2, 'something else'], Reason.find('Something Else'))
+    assert_equal([3, 'something more'], Reason.find('Something More'))
     refute(Reason.find('something wrong'))
+  end
+
+  def test_exists
+    refute(Reason.new(junk).exists?)
+    assert(Reason.new('Something').exists?)
+  end
+
+  def test_save
+    File.stub :write, true do
+      refute(Reason.new('Something').save)
+      assert(Reason.new(junk).save)
+    end
+  end
+
+  def test_save_then_exist
+    File.stub :write, true do
+      reason = Reason.new junk
+      refute(Reason.find(reason.title))
+      refute(reason.exists?)
+      assert(reason.save)
+    end
   end
 
   def setup

@@ -5,24 +5,50 @@ class Reason
   class MissingYamlPathConfigError < StandardError
   end
 
-  attr_reader :reason, :description
+  attr_reader :title, :description
 
-  def initialize(reason:, description: nil)
-    @reason = reason
+  def initialize(title, description = nil)
+    @title = title
     @description = description
   end
+
+  def exists?
+    true if self.class.find title
+  end
+
+  def save
+    return if exists?
+    File.write self.class.yaml_path, save_content.to_yaml
+  end
+
+  def title_sym
+    self.class.convert(title).to_sym
+  end
+  private :title_sym
+
+  def save_content
+    count = self.class.count + 1
+    yaml_data[:reasons][title_sym] = [count, title]
+    { reasons: yaml_data[:reasons] }
+  end
+  private :save_content
+
+  def yaml_data
+    @yaml_data ||= self.class.yaml_data
+  end
+  private :yaml_data
 
   def self.all
     yaml_data[:reasons]
   end
 
   def self.count
-    yaml_data[:count]
+    all.size
   end
 
-  def self.find(reason)
-    reason_safe = convert(reason)
-    yaml_data[:reasons].fetch reason_safe.to_sym, false
+  def self.find(title)
+    title_safe = convert(title)
+    yaml_data[:reasons].fetch title_safe.to_sym, false
   end
 
   def self.yaml_path
@@ -31,12 +57,12 @@ class Reason
   end
 
   class << self
-    def convert(reason)
-      reason.downcase.tr(" '-", '_').tr('~()?!:#', '')
+    def convert(title)
+      title.downcase.tr(" '-", '_').tr('~()?!:#', '')
     end
 
     def yaml_data
-      return { count: 0, reasons: {} } unless File.exist? yaml_path
+      return { reasons: {} } unless File.exist? yaml_path
       YAML.load_file yaml_path
     end
   end
