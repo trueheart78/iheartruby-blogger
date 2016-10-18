@@ -24,12 +24,4 @@ Run the init script:
 ./script/init
 ```
 
-And follow the directions:
-
-```
-----------------------------------------------------------------------
-Add the following to your shell profile of choice:
-
-export PATH="$PATH:/home/josh/Programming/Ruby/iheartruby-blogger/bin"
-----------------------------------------------------------------------
-```
+And follow the directions that it presents.
