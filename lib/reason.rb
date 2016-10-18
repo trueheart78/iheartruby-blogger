@@ -3,7 +3,7 @@ class Reason
   class MissingYamlPathConfigError < StandardError
   end
 
-  attr_reader :reason, :description, :yaml_path
+  attr_reader :reason, :description
 
   def initialize(reason:, description: nil)
     @reason = reason
