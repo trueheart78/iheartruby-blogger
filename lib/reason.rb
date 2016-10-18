@@ -2,14 +2,17 @@
 require 'yaml'
 
 class Reason
-  class MissingYamlPathConfigError < StandardError
+  attr_reader :title
+
+  class MissingYamlPathConfigError < StandardError; end
+
+  def initialize(title)
+    @title = title
   end
 
-  attr_reader :title, :description
-
-  def initialize(title, description = nil)
-    @title = title
-    @description = description
+  def number
+    return self.class.count + 1 unless exists?
+    self.class.find(title).first
   end
 
   def exists?

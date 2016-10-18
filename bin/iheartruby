@@ -1,7 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
-require_relative '../lib/test.rb'
 ENV['NODE_ENV'] ||= 'development'
+
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '../lib'))
+Dotenv.load
+ENV['YAML_PATH'] = File.join ENV['BLOG_PATH'], 'iheartruby-reasons.yaml'
+exit
 require 'date'
 require 'yaml'
 # parsing command-line data

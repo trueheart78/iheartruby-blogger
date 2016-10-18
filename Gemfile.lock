@@ -4,6 +4,7 @@ GEM
     ast (2.3.0)
     byebug (9.0.5)
     coderay (1.1.1)
+    dotenv (2.1.1)
     ffi (1.9.14)
     formatador (0.2.5)
     guard (2.14.0)
@@ -60,6 +61,7 @@ PLATFORMS
 
 DEPENDENCIES
   byebug
+  dotenv
   guard
   guard-minitest
   minitest

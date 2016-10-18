@@ -7,6 +7,8 @@ def full_bin_path
 end
 
 puts '-' * 70
+puts 'Copy the .env.default file to .env and update it with the blog path'
+puts ''
 puts 'Add the following to your shell profile of choice:'
 puts ''
 puts "export PATH=\"$PATH:#{full_bin_path}\""
