@@ -18,10 +18,10 @@ chmod +x bin/awesome_cmd
 
 ## Adding to Your Path
 
-Run the init script:
+Run the setup script:
 
 ```sh
-./script/init
+./script/setup
 ```
 
 And follow the directions that it presents.

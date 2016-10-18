@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+def full_path
+  File.expand_path(File.join(File.dirname(__FILE__), '..'))
+end
+
+def full_bin_path
+  File.join full_path, 'bin'
+end
+
+def bin_exists?
+  true unless `which iheartruby`.empty?
+end
+
+def env_exists?
+  File.exist? File.join(full_path, '.env')
+end
+
+def separator
+  '-' * 70
+end
+
+content = []
+content << separator
+content << ''
+
+unless env_exists?
+  content << 'Copy the .env.default file to .env and update it with the blog path.'
+  content << ''
+end
+
+unless bin_exists?
+  content << 'Add the following to your shell profile of choice:'
+  content << ''
+  content << "export PATH=\"$PATH:#{full_bin_path}\""
+end
+
+if env_exists? && bin_exists?
+  content << 'Everything looks good. No more setup required! :heart:'
+  content << ''
+end
+
+content << separator
+
+puts content.join "\n"
