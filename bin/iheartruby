@@ -1,0 +1,174 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+require_relative '../lib/test.rb'
+ENV['NODE_ENV'] ||= 'development'
+require 'date'
+require 'yaml'
+# parsing command-line data
+# checking for dirty git
+# checking for pre-existing reason
+# writing new reason
+# updating reasons
+# adding files to git
+# commiting git changes
+# pushing to origin/master
+# celebrate
+# reasons class, where it loads from a default locale, and can save to it (yaml)
+# git class, where we simply pass it git commands (poro)
+# post class, where it gets 2+ args to create the post and write it out
+
+class AlreadyCountedThisWayError < StandardError; end
+class DirtyGitError < StandardError; end
+
+if ARGV.empty?
+  puts 'Error: A title for your post is required'
+  exit 1
+end
+
+def today
+  Date.today.to_s
+end
+
+def unicode_options
+  %w(❦ ❧ ☙ ❥ ❣ ♡ ♥ ❤ ➳ ღ 💌 🏩 💓 💔 💕 💖 💗 💘 💙 💚 💛 💜 💝 💞 💟 💑)
+end
+
+def iheartruby
+  "Reason ##{current_count}:"
+end
+
+def post_title
+  "#{iheartruby} #{ARGV.first}"
+end
+
+def post_name
+  "#{today}-#{post_title.downcase.tr(" ':?!_", '-')}.md"
+end
+
+def blog_dir
+  File.expand_path '~/personal-blog'
+end
+
+def posts_dir
+  '_posts/'
+end
+
+def full_file
+  File.join blog_dir, posts_dir, post_name
+end
+
+def relative_file
+  File.join posts_dir, post_name
+end
+
+def relative_count_file
+  File.join posts_dir, count_file
+end
+
+def current_reason
+  ARGV.first.downcase.tr(" '_", '-').tr('~()?!:', '')
+end
+
+def real_content
+  return "[#{ARGV[0]}](#{ARGV[1]})" if ARGV[1]
+  ARGV.first
+end
+
+def commit_message
+  "I :heart: Ruby: #{ARGV.first}"
+end
+
+def current_count
+  @current_count ||= increment_counter
+end
+
+def yaml_data
+  @yaml_data ||= load_yaml
+end
+
+def reason_exists?
+  yaml_data[:reasons].include? current_reason.to_sym
+end
+
+def explode
+  message = "#{current_reason} is already at #0 on your list"
+  raise AlreadyCountedThisWayError, message
+end
+
+def increment_counter
+  explode if reason_exists?
+  count = yaml_data[:count] + 1
+  yaml_data[:reasons][current_reason.to_sym] = [count, ARGV.first]
+  save_count count, yaml_data[:reasons]
+  count
+end
+
+def load_yaml
+  return { count: 0, reasons: {} } unless File.exist? full_count_file
+  YAML.load_file(full_count_file)
+end
+
+def save_count(count, reasons)
+  content = { count: count, reasons: reasons }.to_yaml
+  File.write full_count_file, content
+end
+
+def count_file
+  'iheartruby-reasons.yml'
+end
+
+def full_count_file
+  File.join blog_dir, count_file
+end
+
+def content
+  [
+
+    '---',
+    'layout: post',
+    "title: \"#{post_title}\"",
+    "date: #{Time.now}",
+    'categories: ruby',
+    '---',
+    '',
+    real_content
+  ].join "\n"
+end
+
+puts blog_dir
+Dir.chdir(blog_dir) do
+  clean = `git status`.include?('working directory clean')
+  raise DirtyGitError unless clean
+  # write_file(s)
+  `echo '#{content}' > #{full_file}`
+  save_count
+  puts clean
+end
+
+raise IncompleteCode
+
+puts "Writing '#{full_file}'..."
+puts `cd #{blog_dir}` # `&& git stash -u`
+`echo '#{content}' > #{full_file}`
+puts `ls -l #{full_file}`
+
+puts '*' * 60
+puts `cat #{full_file}`
+puts '*' * 60
+puts `cat #{full_count_file}`
+puts '*' * 60
+commands = [
+  "cd #{blog_dir}",
+  'git status',
+  'git stash -u',
+  "git add #{relative_file}",
+  "git add #{relative_count_file}",
+  "git commit -m '#{commit_message}'",
+  'git stash pop',
+  'git push'
+]
+
+puts 'System Commands Skipped: Leaving early because no thanks'
+# pp commands
+exit 1
+puts `#{commands.join(' && ')}`

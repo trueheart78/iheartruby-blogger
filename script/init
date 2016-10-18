@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+def full_bin_path
+  bin_path = File.join(File.dirname(__FILE__), '..', 'bin')
+  File.expand_path bin_path
+end
+
+puts '-' * 70
+puts 'Add the following to your shell profile of choice:'
+puts ''
+puts "export PATH=\"$PATH:#{full_bin_path}\""
+puts '-' * 70
