@@ -3,6 +3,7 @@ AllCops:
     - vendor/**/*
     - .bundle/**/*
     - Guardfile
+    - bin/**/*
 
 Documentation:
   Enabled: false
