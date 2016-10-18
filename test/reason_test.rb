@@ -20,6 +20,9 @@ class ReasonTest < Minitest::Test
     assert(Reason.all.include?(:something))
     assert(Reason.all.include?(:something_else))
     assert(Reason.all.include?(:something_more))
+  end
+
+  def test_count
     assert_equal(3, Reason.count)
   end
 
@@ -49,6 +52,9 @@ class ReasonTest < Minitest::Test
       refute(Reason.find(reason.title))
       refute(reason.exists?)
       assert(reason.save)
+      Reason.stub :find, [1, reason.title] do
+        assert(reason.exists?)
+      end
     end
   end
 
