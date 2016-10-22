@@ -10,7 +10,7 @@ def full_bin_path
 end
 
 def bin_exists?
-  true unless `which iheartruby`.empty?
+  `which iheartruby`.start_with? full_bin_path
 end
 
 def env_exists?
