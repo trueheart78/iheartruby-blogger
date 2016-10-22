@@ -5,11 +5,21 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '../lib'))
 
 require 'minitest/autorun'
 require 'securerandom'
+require 'faker'
 require 'byebug'
 
 module TestHelper
   def junk
     SecureRandom.uuid
+  end
+
+  def junk_title
+    Faker::Lorem.sentence
+  end
+
+  def junk_url(format = :http)
+    return Faker::Internet.url.gsub('http:', 'https:') if format == :https
+    Faker::Internet.url
   end
 
   def fixture_path(path = '')
@@ -44,4 +54,13 @@ module TestHelper
     ENV['YAML_PATH'] = @yaml_file if @yaml_file
     ENV['BLOG_PATH'] = @blog_path if @blog_path
   end
+
+  def blog_path
+    ENV['BLOG_PATH']
+  end
+
+  def posts_path
+    File.join blog_path, '_posts'
+  end
+  alias post_path posts_path
 end

@@ -9,19 +9,26 @@ class Post
 
   def initialize(title, url = nil)
     @title = title
-    @url = url
+    @url = url.downcase if url
   end
 
   def exists?
     reason.exists?
   end
 
-  def save
-    return if exists?
-    File.write 'path.md', content
+  def valid?
+    return if title.nil? || title.empty?
+    if url
+      return unless url =~ /(http|https):\/\//
+    end
+    true
   end
 
-  private
+  def save
+    return unless valid?
+    return if exists?
+    File.write full_path, raw_content
+  end
 
   def full_title
     "Reason ##{reason.number}: #{title.strip}"
@@ -32,8 +39,19 @@ class Post
     File.join ENV['BLOG_PATH'], '_posts', file_name
   end
 
+  def content
+    return "[#{title}](#{url})" if url
+    title
+  end
+
+  private
+
   def file_name
-    full_title.downcase.tr(" '-", '_').tr('~()?!:#', '') << '.md'
+    "#{today} #{full_title}".downcase.tr(' _', '-').gsub(/[^0-9a-z-]/, '') << '.md'
+  end
+
+  def today
+    Date.today.to_s
   end
 
   def reason
@@ -44,17 +62,12 @@ class Post
     [
       '---',
       'layout: post',
-      "title: \"#{title}\"",
+      "title: \"#{full_title}\"",
       "date: #{Time.now}",
       'categories: ruby',
       '---',
       '',
       content
     ].join "\n"
-  end
-
-  def content
-    return "[#{title}](#{url})" if url
-    title
   end
 end

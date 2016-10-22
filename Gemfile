@@ -13,5 +13,6 @@ end
 group :test, :development do
   gem 'minitest'
   gem 'byebug'
+  gem 'faker'
   gem 'rubocop', require: false
 end

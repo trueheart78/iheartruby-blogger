@@ -3,8 +3,25 @@
 ENV['NODE_ENV'] ||= 'development'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '../lib'))
+
+require 'bundler'
+Bundler.require
+
 Dotenv.load
 ENV['YAML_PATH'] = File.join ENV['BLOG_PATH'], 'iheartruby-reasons.yaml'
+
+if ARGV.empty?
+  puts 'Error: A title for your post is required'
+  exit 1
+else
+  title = ARGV.shift
+  url   = ARGV.first
+  require 'post'
+  p Post.new title, url
+end
+
+
+
 exit
 require 'date'
 require 'yaml'
@@ -24,10 +41,6 @@ require 'yaml'
 class AlreadyCountedThisWayError < StandardError; end
 class DirtyGitError < StandardError; end
 
-if ARGV.empty?
-  puts 'Error: A title for your post is required'
-  exit 1
-end
 
 def today
   Date.today.to_s
