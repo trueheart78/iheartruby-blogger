@@ -34,7 +34,6 @@ end
 
 def env_exists?
   File.exist? File.join(full_path, '.env')
-  false
 end
 
 def separator
