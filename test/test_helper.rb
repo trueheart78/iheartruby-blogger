@@ -8,7 +8,7 @@ require 'securerandom'
 require 'faker'
 require 'byebug'
 
-module TestHelper
+class IHeartTest < Minitest::Test
   def junk
     SecureRandom.uuid
   end
@@ -63,4 +63,15 @@ module TestHelper
     File.join blog_path, '_posts'
   end
   alias post_path posts_path
+
+  def capture_output
+    foo = StringIO.new
+    old_stdout = $stdout
+    $stdout = foo
+    yield
+    $stdout.string
+  ensure
+    $stdout = old_stdout
+  end
+  alias suppress_output capture_output
 end

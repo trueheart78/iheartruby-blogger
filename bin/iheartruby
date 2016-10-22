@@ -17,7 +17,8 @@ else
   title = ARGV.shift
   url   = ARGV.first
   require 'post'
-  p Post.new title, url
+  post = Post.new title, url
+  Git.new post
 end
 
 

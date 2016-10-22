@@ -2,9 +2,7 @@
 require_relative 'test_helper'
 require 'reason'
 
-class ReasonTest < Minitest::Test
-  include TestHelper
-
+class ReasonTest < IHeartTest
   def test_unset_env_yaml_path
     remove_yaml_path
     assert_raises Reason::MissingYamlPathConfigError do

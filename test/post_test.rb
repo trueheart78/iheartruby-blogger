@@ -2,9 +2,7 @@
 require_relative 'test_helper'
 require 'post'
 
-class PostTest < Minitest::Test
-  include TestHelper
-
+class PostTest < IHeartTest
   def test_exists
     assert(Post.new('something').exists?)
     refute(Post.new(junk_title).exists?)
@@ -87,7 +85,7 @@ class PostTest < Minitest::Test
       assert_match(/title:\s\"#{post.full_title}\"/, content)
       assert_match(/categories:\sruby/, content)
 
-      assert(content.end_with? post.content)
+      assert(content.end_with?(post.content))
     end
   end
 end
