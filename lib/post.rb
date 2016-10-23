@@ -19,7 +19,7 @@ class Post
   def valid?
     return if title.nil? || title.empty?
     if url
-      return unless url =~ /(http|https):\/\//
+      return unless url =~ %r{(http|https):\/\/}
     end
     true
   end
@@ -47,7 +47,9 @@ class Post
   private
 
   def file_name
-    "#{today} #{full_title}".downcase.tr(' _', '-').gsub(/[^0-9a-z-]/, '') << '.md'
+    "#{today} #{full_title}"
+      .downcase.tr(' _', '-')
+      .gsub(/[^0-9a-z-]/, '') << '.md'
   end
 
   def today

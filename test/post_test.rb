@@ -20,7 +20,9 @@ class PostTest < IHeartTest
     assert Post.new(junk_title).valid?
     assert Post.new(junk_title, junk_url).valid?
     assert Post.new(junk_title, junk_url(:https)).valid?
+  end
 
+  def test_when_invalid
     refute Post.new(nil).valid?
     refute Post.new('').valid?
     refute Post.new(junk_title, 'www.xyz.com').valid?
