@@ -5,7 +5,7 @@ require 'tmpdir'
 
 class GitTest < IHeartTest
   def subject
-    @subject ||= Git.new valid_post
+    @subject ||= Git.new
   end
 
   def temp_dir
@@ -42,16 +42,5 @@ class GitTest < IHeartTest
         system 'git', 'commit', '-m', junk
       end
     end
-  end
-
-  def commit_changes
-  end
-
-  def valid_post
-    @valid_post ||= Post.new junk_title, junk_url(:https)
-  end
-
-  def invalid_post
-    @invalid_post ||= Post.new nil
   end
 end

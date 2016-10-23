@@ -1,11 +1,7 @@
 # frozen_string_literal: true
-require 'post'
-
 class Git
-  class DirtyGitError < StandardError; end
-
-  def initialize(post)
-    @post = post
+  def initialize
+    @stashed = false
   end
 
   def supported?
@@ -16,12 +12,32 @@ class Git
     status.include? 'working directory clean'
   end
 
+  def stash
+    return unless supported? || clean?
+    run 'stash -u'
+    @stashed = true
+    yield
+  ensure
+    run 'stash pop' if stashed?
+    @stashed = false
+  end
+
+  def add(files)
+    return unless clean?
+    files.each { |f| run "add #{f}" }
+  end
+
   private
 
+  def stashed?
+    @stashed
+  end
+
   def status
-    return @status if @status
-    Dir.chdir ENV['BLOG_PATH'] do
-      @status = `git status`
-    end
+    @status ||= run 'status'
+  end
+
+  def run(command)
+    Dir.chdir ENV['BLOG_PATH'] { `git #{command}` }
   end
 end
