@@ -25,8 +25,7 @@ class Post
   end
 
   def save
-    return unless valid?
-    return if exists?
+    return if exists? || !valid?
     File.write full_path, raw_content
   end
 
@@ -40,8 +39,8 @@ class Post
   end
 
   def content
-    return "[#{title}](#{url})" if url
-    title
+    return title unless url
+    "[#{title}](#{url})"
   end
 
   private
