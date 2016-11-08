@@ -61,7 +61,7 @@ class Reason
 
   class << self
     def convert(title)
-      title.downcase.tr(" '-", '_').tr('~()?!:#', '')
+      title.downcase.tr(' -', '_').gsub(/[^0-9a-z_]/, '')
     end
 
     def yaml_data

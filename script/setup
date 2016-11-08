@@ -20,6 +20,29 @@ class Setup
     @content.join "\n"
   end
 
+  def blog_path_options
+    @blog_dir_paths ||= blog_dir_options.map { |dir| find_path dir }.flatten
+  end
+
+  def find_path(dir)
+    path = `find #{File.expand_path('~')} -type d -name '#{dir}'`
+    return [] if path.empty?
+    path.split "\n"
+  end
+
+  def blog_dir_options
+    [
+      'trueheart78.github.io',
+      'my-github-page',
+      'personal-blog',
+      'my-personal-page'
+    ]
+  end
+
+  def bin_exists?
+    `which iheartruby`.start_with? full_bin_path
+  end
+
   private
 
   def insert_separator
@@ -38,6 +61,26 @@ class Setup
                  '',
                  'Update the .env file with the full blog path.']
   end
+
+#   unless env_exists?
+#     if blog_path_options.size.positive?
+#       if blog_path_options.size == 1
+#         content << 'Setup the .env config:'
+#         content << ''
+#         content << "echo 'BLOG_PATH: #{blog_path_options.first}' >> .env"
+#       else
+#         content << 'Multiple blog paths detected - use the command that matches'
+#         blog_path_options.each do |blog_path_option|
+#           content << "echo 'BLOG_PATH: #{blog_path_option}' >> .env"
+#         end
+#       end
+#     else
+#       content << 'Unable to detect the path to the blog'
+#       content << 'Please copy the .env.default file to .env'
+#       content << 'and update the BLOG_PATH with it\'s full path'
+#     end
+#     content << ''
+#   end
 
   def add_bin_output
     add_content ['Add the following to your shell profile of choice:',

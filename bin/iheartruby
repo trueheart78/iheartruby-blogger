@@ -3,8 +3,29 @@
 ENV['NODE_ENV'] ||= 'development'
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '../lib'))
+
+require 'bundler'
+Bundler.require
+
 Dotenv.load
 ENV['YAML_PATH'] = File.join ENV['BLOG_PATH'], 'iheartruby-reasons.yaml'
+
+if ARGV.empty?
+  puts 'Error: A title for your post is required'
+  exit 1
+else
+  title = ARGV.shift
+  url   = ARGV.first
+  require 'post'
+  require 'git'
+  post = Post.new title, url
+  Git.new post
+  # and git is clean
+  # post is valid and does not exist
+  # then saving should save the reason AND the post
+  # and then add the files, then commit the post and the reason
+  # - if git is dirty, allow a command to try and stash it? if it works, great, otherwise, pop it back
+end
 exit
 require 'date'
 require 'yaml'
@@ -24,10 +45,6 @@ require 'yaml'
 class AlreadyCountedThisWayError < StandardError; end
 class DirtyGitError < StandardError; end
 
-if ARGV.empty?
-  puts 'Error: A title for your post is required'
-  exit 1
-end
 
 def today
   Date.today.to_s
