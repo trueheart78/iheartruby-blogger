@@ -1,46 +1,73 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-def full_path
-  File.expand_path(File.join(File.dirname(__FILE__), '..'))
+class Setup
+  def initialize
+    @content = []
+  end
+
+  def analyze
+    insert_separator
+    add_content separator
+    add_env_output unless env_exists?
+    add_bin_output unless bin_exists?
+    add_nice_content if env_exists? && bin_exists?
+    insert_separator
+    self
+  end
+
+  def content
+    @content.join "\n"
+  end
+
+  private
+
+  def insert_separator
+    add_content separator
+  end
+
+  def add_content(output)
+    output = [output] unless output.instance_of? Array
+    @content.concat output.concat([''])
+  end
+
+  def add_env_output
+    add_content ['Run the following command to create the .env file:',
+                 '',
+                 'cp .env.default .env',
+                 '',
+                 'Update the .env file with the full blog path.']
+  end
+
+  def add_bin_output
+    add_content ['Add the following to your shell profile of choice:',
+                 '',
+                 "export PATH=\"$PATH:#{full_bin_path}\""]
+  end
+
+  def add_nice_content
+    add_content 'Everything looks good. No more setup required! :heart:'
+  end
+
+  def full_path
+    File.expand_path(File.join(File.dirname(__FILE__), '..'))
+  end
+
+  def full_bin_path
+    File.join full_path, 'bin'
+  end
+
+  def bin_exists?
+    true unless `which iheartruby`.empty?
+  end
+
+  def env_exists?
+    File.exist? File.join(full_path, '.env')
+  end
+
+  def separator
+    '-' * 70
+  end
 end
 
-def full_bin_path
-  File.join full_path, 'bin'
-end
-
-def bin_exists?
-  true unless `which iheartruby`.empty?
-end
-
-def env_exists?
-  File.exist? File.join(full_path, '.env')
-end
-
-def separator
-  '-' * 70
-end
-
-content = []
-content << separator
-content << ''
-
-unless env_exists?
-  content << 'Copy the .env.default file to .env and update it with the blog path.'
-  content << ''
-end
-
-unless bin_exists?
-  content << 'Add the following to your shell profile of choice:'
-  content << ''
-  content << "export PATH=\"$PATH:#{full_bin_path}\""
-end
-
-if env_exists? && bin_exists?
-  content << 'Everything looks good. No more setup required! :heart:'
-  content << ''
-end
-
-content << separator
-
-puts content.join "\n"
+puts Setup.new.analyze.content
