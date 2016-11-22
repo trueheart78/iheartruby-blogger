@@ -15,5 +15,6 @@ group :test, :development do
   gem 'minitest'
   gem 'byebug'
   gem 'faker'
+  gem 'webmock'
   gem 'rubocop', require: false
 end
