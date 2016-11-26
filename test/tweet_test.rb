@@ -6,12 +6,10 @@ class TweetTest < Minitest::Test
   TestPost = Struct.new :full_title, :url
 
   def test_sample
-    Tweet.update "post"
-    byebug
+    Tweet.update 'post'
   end
 
   def post
-    TestPost.new "sample", "http://www.example.com"
+    TestPost.new 'sample', 'http://www.example.com'
   end
-
 end
