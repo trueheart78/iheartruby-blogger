@@ -18,39 +18,88 @@ RSpec.describe Post do
     end
   end
 
-  describe 'attr methods' do
-    it 'xxx' do
-      expect(Post.new(title).title).to eq title
-      expect(Post.new(title).url).to be nil
+  describe '#title' do
+    subject { described_class.new title }
 
-      expect(Post.new(title, url).url).to eq url
+    context 'when passed in' do
+      it 'matches what was passed in' do
+        expect(subject.title).to eq title
+      end
+
+      let(:title) { junk_title }
+    end
+  end
+
+  describe '#url' do
+    subject { described_class.new title, url }
+
+    context 'when passed in' do
+      it 'matches what was passed in' do
+        expect(subject.url).to eq url
+      end
+
+      let(:url)   { junk }
     end
 
     let(:title) { junk_title }
-    let(:url)   { junk }
   end
-  #
-  #  def test_attr_methods
-  #    title = junk_title
-  #    assert_equal(title, Post.new(title).title)
-  #    assert_equal(nil, Post.new(title).url)
-  #    url = junk
-  #    assert_equal(url, Post.new(title, url).url)
-  #  end
-  #
-  #  def test_valid
-  #    assert Post.new(junk_title).valid?
-  #    assert Post.new(junk_title, junk_url).valid?
-  #    assert Post.new(junk_title, junk_url(:https)).valid?
-  #  end
-  #
-  #  def test_when_invalid
-  #    refute Post.new(nil).valid?
-  #    refute Post.new('').valid?
-  #    refute Post.new(junk_title, 'www.xyz.com').valid?
-  #    refute Post.new(junk_title, 'ftp://butts.com').valid?
-  #  end
-  #
+
+  describe '#valid?' do
+    subject { described_class.new title, url }
+
+    context 'when passed a title and basic url' do
+      it 'returns true' do
+        expect(subject).to be_valid
+      end
+
+      let(:url)   { junk_url :http }
+    end
+
+    context 'when passed a title and secure url' do
+      it 'returns true' do
+        expect(subject).to be_valid
+      end
+
+      let(:url)   { junk_url :https }
+    end
+
+    context 'when passed a title and a non-http url' do
+
+      it 'returns false' do
+        expect(subject).to_not be_valid
+      end
+
+      let(:url) { "ftp://#{junk}" }
+    end
+
+    context 'when passed a title only' do
+      it 'returns true' do
+        expect(subject).to be_valid
+      end
+
+      let(:url) { nil }
+    end
+
+    context 'when passed an empty title' do
+      it 'returns false' do
+        expect(subject).to_not be_valid
+      end
+
+      let(:title) { '' }
+    end
+
+    context 'when passed a nil title' do
+      it 'returns false' do
+        expect(subject).to_not be_valid
+      end
+
+      let(:title) { nil }
+    end
+
+    let(:title) { junk_title }
+    let(:url)   { nil }
+  end
+
   #  def test_full_title
   #    post = Post.new junk_title
   #    assert_equal("Reason #4: #{post.title}", post.full_title)
