@@ -14,10 +14,11 @@ if ARGV.empty?
   puts 'Error: A title for your post is required'
   exit 1
 else
-  title = ARGV.shift
-  url   = ARGV.first
   require 'post'
   require 'git'
+
+  title = ARGV.shift
+  url   = ARGV.first
   post = Post.new title, url
   Git.new post
   # and git is clean
@@ -27,6 +28,7 @@ else
   # - if git is dirty, allow a command to try and stash it? if it works, great, otherwise, pop it back
 end
 exit
+
 require 'date'
 require 'yaml'
 # parsing command-line data

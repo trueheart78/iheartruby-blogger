@@ -9,10 +9,13 @@ gem 'twitter'
 group :development do
   gem 'guard'
   gem 'guard-minitest'
+  gem 'guard-rspec'
 end
 
 group :test, :development do
   gem 'minitest'
+  gem 'rspec'
+  gem 'rspec-junklet'
   gem 'byebug'
   gem 'faker'
   gem 'rubocop', require: false

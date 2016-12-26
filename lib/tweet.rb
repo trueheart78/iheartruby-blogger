@@ -2,7 +2,7 @@
 class Tweet
   class << self
     def update(post)
-      p post
+      true
     end
   end
 end
